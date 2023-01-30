@@ -25,6 +25,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+//require('../../config.php');
+require_once("$CFG->dirroot/blocks/coursefilesarchive/block_coursefilesarchive_form.php");
+require_once("$CFG->dirroot/repository/lib.php");
+
 /**
  * Class coursefilesarchive.
  *
@@ -43,6 +47,8 @@ class block_coursefilesarchive extends block_base {
      * Add some text content to our block.
      */
     public function get_content() {
+        global $CFG;
+
         // Do we have any content?
         if ($this->content !== null) {
             return $this->content;
@@ -55,7 +61,39 @@ class block_coursefilesarchive extends block_base {
 
         // Content.
         $this->content = new stdClass();
-        $this->content->text = '<p>The Course Files Archive</p>';
+
+        $context = context_block::instance($this->instance->id, MUST_EXIST);
+        $data = new stdClass();
+        //$data->id = $this->instance->id;
+        $data->id = $this->page->course->id;
+        $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes);
+        $options = array('subdirs' => 1, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*');
+        file_prepare_standard_filemanager($data, 'coursefilesarchive', $options, $context, 'block_coursefilesarchive', 'course', $this->page->course->id);
+
+        $mform = new block_coursefilesarchive_edit_form(null, array('data' => $data, 'options' => $options));
+        $redirecturl = course_get_url($this->page->course->id);
+        if ($mform->is_cancelled()) {
+            redirect($redirecturl);
+        } else if ($formdata = $mform->get_data()) {
+            $formdata = file_postupdate_standard_filemanager($formdata, 'coursefilesarchive', $options, $context, 'block_coursefilesarchive', 'course', $this->page->course->id);
+            //$folder = $DB->get_record('folder', array('id'=>$cm->instance), '*', MUST_EXIST);
+            //$folder->timemodified = time();
+            //$folder->revision = $folder->revision + 1;
+
+            //$DB->update_record('folder', $folder);
+
+            /* $params = array(
+                'context' => $context,
+                'objectid' => $folder->id
+            ); */
+            //$event = \mod_folder\event\folder_updated::create($params);
+            //$event->add_record_snapshot('folder', $folder);
+            //$event->trigger();
+
+            redirect($redirecturl);
+        }
+
+        $this->content->text = $mform->render();
         $this->content->footer = '';
 
         return $this->content;
