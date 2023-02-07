@@ -44,6 +44,7 @@ class block_coursefilesarchive_edit_form extends moodleform {
         $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('files'), null, $options);
         $submit_string = get_string('savechanges');
         $this->add_action_buttons(true, $submit_string);
+        $mform->addElement('button', 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
 
         $this->set_data($data);
     }

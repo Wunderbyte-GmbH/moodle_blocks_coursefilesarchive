@@ -1,0 +1,19 @@
+.block_coursefilesarchive #fitem_id_coursefilesarchive_filemanager {
+    margin-left: 0;
+}
+
+.block_coursefilesarchive #fitem_id_coursefilesarchive_filemanager .col-form-label,
+.block_coursefilesarchive #fitem_id_updatearchive .col-form-label {
+    display: none !important;
+}
+
+.block_coursefilesarchive #fitem_id_coursefilesarchive_filemanager [data-fieldtype="filemanager"],
+.block_coursefilesarchive #fitem_id_updatearchive [data-fieldtype="button"] {
+    flex: 100%;
+    max-width: 100%;
+    padding-left: 0;
+}
+
+.block_coursefilesarchive .mform > .form-group {
+    margin-left: 0;
+}

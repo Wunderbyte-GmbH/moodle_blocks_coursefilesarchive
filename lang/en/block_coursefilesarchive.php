@@ -28,6 +28,8 @@
 // General.
 $string['pluginname'] = 'Course files archive';
 
+$string['updatearchive'] = 'Update archive';
+
 // Capability strings.
 $string['coursefilesarchive:addinstance'] = 'Add a new course files archive block';
 
