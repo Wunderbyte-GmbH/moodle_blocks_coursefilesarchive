@@ -36,7 +36,7 @@ class block_coursefilesarchive_edit_form extends moodleform {
     function definition() {
         $mform = $this->_form;
 
-        $data    = $this->_customdata['data'];
+        $data = $this->_customdata['data'];
         $options = $this->_customdata['options'];
 
         $mform->addElement('hidden', 'id', $data->id);
@@ -44,7 +44,21 @@ class block_coursefilesarchive_edit_form extends moodleform {
         $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('files'), null, $options);
         $submit_string = get_string('savechanges');
         $this->add_action_buttons(true, $submit_string);
-        $mform->addElement('button', 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
+
+        $this->set_data($data);
+    }
+}
+
+class block_coursefilesarchive_update_form extends moodleform {
+    function definition() {
+        $mform = $this->_form;
+
+        $data = $this->_customdata['data'];
+
+        $mform->addElement('hidden', 'id', $data->id);
+        $mform->setType('id', PARAM_INT);
+        $update_string = get_string('updatearchive', 'block_coursefilesarchive');
+        $this->add_action_buttons(false, $update_string);
 
         $this->set_data($data);
     }

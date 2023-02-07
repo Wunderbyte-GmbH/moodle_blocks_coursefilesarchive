@@ -97,31 +97,39 @@ class block_coursefilesarchive extends block_base {
 
         $this->content->footer = 'CTX: '.$context->id.' CRS: '.$this->page->course->id.'<br>';
         $this->content->footer .= 'MD: '.$CFG->dataroot.'<br>';
-        // Make the folder for the files.
-        $blockarchivefolder = $CFG->dataroot.'/block_coursefilesarchive/'.$this->page->course->id;
-        if (!is_dir($blockarchivefolder.'/')) {
-            mkdir($blockarchivefolder.'/', 0770, true);
-        }
         // Returns an array of `stored_file` instances - ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area.
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
         foreach ($files as $file) {
             $this->content->footer .= $file->get_filepath().$file->get_filename().'<br>';
-            if ($file->is_directory()) {
-                $filepath = $file->get_filepath();
-                // Check that the directory exists, if not, create.
-                if ((strlen($filepath) > 1) && (!is_dir($blockarchivefolder.$filepath))) {
-                    mkdir($blockarchivefolder.$filepath, 0770, true);
+        }
+
+        $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
+        if ($formdata = $uform->get_data()) {
+            // Make the folder for the files.
+            $blockarchivefolder = $CFG->dataroot.'/block_coursefilesarchive/'.$this->page->course->id;
+            if (!is_dir($blockarchivefolder.'/')) {
+                mkdir($blockarchivefolder.'/', 0770, true);
+            }
+            foreach ($files as $file) {
+                if ($file->is_directory()) {
+                    $filepath = $file->get_filepath();
+                    // Check that the directory exists, if not, create.
+                    if ((strlen($filepath) > 1) && (!is_dir($blockarchivefolder.$filepath))) {
+                        mkdir($blockarchivefolder.$filepath, 0770, true);
+                    }
                 }
             }
-        }
-        foreach ($files as $file) {
-            if (!$file->is_directory()) {
-                $filepath = $file->get_filepath();
-                $filename = $file->get_filename();
-                $file->copy_content_to($blockarchivefolder.$filepath.$filename); 
+            foreach ($files as $file) {
+                if (!$file->is_directory()) {
+                    $filepath = $file->get_filepath();
+                    $filename = $file->get_filename();
+                    $file->copy_content_to($blockarchivefolder.$filepath.$filename); 
+                }
             }
+            redirect($redirecturl);
         }
+        $this->content->text .= $uform->render();
 
         return $this->content;
     }
