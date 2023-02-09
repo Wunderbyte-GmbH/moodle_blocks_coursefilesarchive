@@ -107,24 +107,57 @@ class block_coursefilesarchive extends block_base {
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
             // Make the folder for the files.
-            $blockarchivefolder = $CFG->dataroot.'/block_coursefilesarchive/'.$this->page->course->id;
-            if (!is_dir($blockarchivefolder.'/')) {
-                mkdir($blockarchivefolder.'/', 0770, true);
+            $blockarchivefolder = $CFG->dataroot.'/repository/archive/';
+            if (!is_dir($blockarchivefolder)) {
+                mkdir($blockarchivefolder, 0770, true);
             }
-            foreach ($files as $file) {
+            $courseid = $this->page->course->id;
+            // Make / check all of the folders we need.
+            /*foreach ($files as $file) {
+                $courseid = $this->page->course->id;
+                $fileuserid = $file->get_userid();
+                $thedir = $blockarchivefolder.$fileuserid;
+                if (!is_dir($thedir)) {
+                    mkdir($thedir, 0770, true);
+error_log($thedir);
+                }
+                $thedir = $blockarchivefolder.$fileuserid.'/'.$courseid;
+                if (!is_dir($thedir)) {
+                    mkdir($thedir, 0770, true);
+error_log($thedir);
+                }
+
                 if ($file->is_directory()) {
                     $filepath = $file->get_filepath();
+                    $fileuserid = $file->get_userid();
                     // Check that the directory exists, if not, create.
-                    if ((strlen($filepath) > 1) && (!is_dir($blockarchivefolder.$filepath))) {
-                        mkdir($blockarchivefolder.$filepath, 0770, true);
+                    $thedir = $blockarchivefolder.$fileuserid.'/'.$courseid.$filepath;
+                    if ((strlen($filepath) > 1) && (!is_dir($thedir))) {
+                        //mkdir($blockarchivefolder.$fileuserid.'/'.$courseid.$filepath, 0770, true);
+error_log($thedir);
                     }
                 }
-            }
+            }*/
             foreach ($files as $file) {
                 if (!$file->is_directory()) {
                     $filepath = $file->get_filepath();
                     $filename = $file->get_filename();
-                    $file->copy_content_to($blockarchivefolder.$filepath.$filename); 
+                    $fileuserid = $file->get_userid();
+                    if (!$fileuserid) {
+                        $fileuserid = '0';
+                    }
+                    $thedir = $fileuserid.'/'.$courseid.$filepath;
+                    error_log($thedir);
+                    $thepathparts = explode('/', $thedir);
+                    $depth = '';
+                    foreach ($thepathparts as $pathpart) {
+                        $depth .= $pathpart.'/';
+                        if (!is_dir($blockarchivefolder.$depth)) {
+                            mkdir($blockarchivefolder.$depth, 0770, true);
+error_log($blockarchivefolder.$depth);
+                        }                        
+                    }
+                    $file->copy_content_to($blockarchivefolder.$thedir.$filename); 
                 }
             }
             redirect($redirecturl);
