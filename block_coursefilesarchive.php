@@ -95,8 +95,10 @@ class block_coursefilesarchive extends block_base {
 
         $this->content->text = $mform->render();
 
-        $this->content->footer = 'CTX: '.$context->id.' CRS: '.$this->page->course->id.'<br>';
-        $this->content->footer .= 'MD: '.$CFG->dataroot.'<br>';
+        //$this->content->footer = 'CTX: '.$context->id.' CRS: '.$this->page->course->id.'<br>';
+        //$this->content->footer .= 'MD: '.$CFG->dataroot.'<br>';
+        $this->content->footer = '';
+
         // Returns an array of `stored_file` instances - ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area.
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
@@ -107,37 +109,24 @@ class block_coursefilesarchive extends block_base {
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
             // Make the folder for the files.
-            $blockarchivefolder = $CFG->dataroot.'/repository/archive/';
+            $archivelocation = get_config('block_coursefilesarchive', 'archivelocation');
+            if (!empty($archivelocation)) {
+                if ($archivelocation[0] != '/') {
+                    $archivelocation = '/'.$archivelocation;
+                }
+                if ($archivelocation[strlen($archivelocation) - 1] != '/') {
+                    $archivelocation = $archivelocation.'/';
+                }
+            } else {
+                // Use default.
+                $archivelocation = '/repository/archive/';
+            }
+            $blockarchivefolder = $CFG->dataroot.$archivelocation;
             if (!is_dir($blockarchivefolder)) {
                 mkdir($blockarchivefolder, 0770, true);
             }
             $courseid = $this->page->course->id;
-            // Make / check all of the folders we need.
-            /*foreach ($files as $file) {
-                $courseid = $this->page->course->id;
-                $fileuserid = $file->get_userid();
-                $thedir = $blockarchivefolder.$fileuserid;
-                if (!is_dir($thedir)) {
-                    mkdir($thedir, 0770, true);
-error_log($thedir);
-                }
-                $thedir = $blockarchivefolder.$fileuserid.'/'.$courseid;
-                if (!is_dir($thedir)) {
-                    mkdir($thedir, 0770, true);
-error_log($thedir);
-                }
 
-                if ($file->is_directory()) {
-                    $filepath = $file->get_filepath();
-                    $fileuserid = $file->get_userid();
-                    // Check that the directory exists, if not, create.
-                    $thedir = $blockarchivefolder.$fileuserid.'/'.$courseid.$filepath;
-                    if ((strlen($filepath) > 1) && (!is_dir($thedir))) {
-                        //mkdir($blockarchivefolder.$fileuserid.'/'.$courseid.$filepath, 0770, true);
-error_log($thedir);
-                    }
-                }
-            }*/
             foreach ($files as $file) {
                 if (!$file->is_directory()) {
                     $filepath = $file->get_filepath();
@@ -147,16 +136,17 @@ error_log($thedir);
                         $fileuserid = '0';
                     }
                     $thedir = $fileuserid.'/'.$courseid.$filepath;
-                    error_log($thedir);
+
+                    // Ensure the destination path exists.
                     $thepathparts = explode('/', $thedir);
                     $depth = '';
                     foreach ($thepathparts as $pathpart) {
                         $depth .= $pathpart.'/';
                         if (!is_dir($blockarchivefolder.$depth)) {
                             mkdir($blockarchivefolder.$depth, 0770, true);
-error_log($blockarchivefolder.$depth);
                         }                        
                     }
+
                     $file->copy_content_to($blockarchivefolder.$thedir.$filename); 
                 }
             }

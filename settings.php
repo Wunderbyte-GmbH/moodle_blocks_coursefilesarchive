@@ -25,21 +25,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// General.
-$string['pluginname'] = 'Course files archive';
+defined('MOODLE_INTERNAL') || die();
 
-$string['updatearchive'] = 'Update archive';
+if ($ADMIN->fulltree) {
 
-// Settings.
-$string['settingsheader'] = 'Course files archive settings';
-$string['settingsheaderdesc'] = 'Settings for the Course files archive.  If empty then the default will be used.';
+    $settings->add(new admin_setting_heading('block_coursefilesarchive_header',
+        get_string('settingsheader', 'block_coursefilesarchive'),
+        get_string('settingsheaderdesc', 'block_coursefilesarchive')));
 
-$string['archivelocation'] = 'Archive location';
-$string['archivelocationdesc'] = 'The archive location within the Moodle data folder.';
-
-
-// Capability strings.
-$string['coursefilesarchive:addinstance'] = 'Add a new course files archive block';
-
-// Privacy.
-$string['privacy:nop'] = 'To be completed';
+    // The archive path.
+    $settings->add(new admin_setting_configtext('block_coursefilesarchive/archivelocation',
+        get_string('archivelocation', 'block_coursefilesarchive'),
+        get_string('archivelocationdesc', 'block_coursefilesarchive'),
+        'repository/archive', PARAM_PATH));
+}
