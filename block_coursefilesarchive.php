@@ -86,9 +86,9 @@ class block_coursefilesarchive extends block_base {
                 $formdata,
                 'coursefilesarchive',
                 $options,
-                $context, 
+                $context,
                 'block_coursefilesarchive',
-                'course', 
+                'course',
                 $this->page->course->id);
 
             redirect($redirecturl);
