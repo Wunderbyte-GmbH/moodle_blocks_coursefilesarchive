@@ -64,7 +64,6 @@ class block_coursefilesarchive extends block_base {
 
         $context = context_block::instance($this->instance->id, MUST_EXIST);
         $data = new stdClass();
-        //$data->id = $this->instance->id;
         $data->id = $this->page->course->id;
         $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes);
         $options = array('subdirs' => 1, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*');
@@ -76,35 +75,17 @@ class block_coursefilesarchive extends block_base {
             redirect($redirecturl);
         } else if ($formdata = $mform->get_data()) {
             $formdata = file_postupdate_standard_filemanager($formdata, 'coursefilesarchive', $options, $context, 'block_coursefilesarchive', 'course', $this->page->course->id);
-            //$folder = $DB->get_record('folder', array('id'=>$cm->instance), '*', MUST_EXIST);
-            //$folder->timemodified = time();
-            //$folder->revision = $folder->revision + 1;
-
-            //$DB->update_record('folder', $folder);
-
-            /* $params = array(
-                'context' => $context,
-                'objectid' => $folder->id
-            ); */
-            //$event = \mod_folder\event\folder_updated::create($params);
-            //$event->add_record_snapshot('folder', $folder);
-            //$event->trigger();
 
             redirect($redirecturl);
         }
 
         $this->content->text = $mform->render();
 
-        //$this->content->footer = 'CTX: '.$context->id.' CRS: '.$this->page->course->id.'<br>';
-        //$this->content->footer .= 'MD: '.$CFG->dataroot.'<br>';
         $this->content->footer = '';
 
         // Returns an array of `stored_file` instances - ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area.
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
-        /*foreach ($files as $file) {
-            $this->content->footer .= $file->get_filepath().$file->get_filename().'<br>';
-        }*/
 
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
@@ -127,6 +108,7 @@ class block_coursefilesarchive extends block_base {
             }
             $courseid = $this->page->course->id;
 
+            // Copy the files.
             foreach ($files as $file) {
                 if (!$file->is_directory()) {
                     $filepath = $file->get_filepath();
