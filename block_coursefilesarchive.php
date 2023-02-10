@@ -102,9 +102,9 @@ class block_coursefilesarchive extends block_base {
         // Returns an array of `stored_file` instances - ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area.
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
-        foreach ($files as $file) {
+        /*foreach ($files as $file) {
             $this->content->footer .= $file->get_filepath().$file->get_filename().'<br>';
-        }
+        }*/
 
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
@@ -131,11 +131,7 @@ class block_coursefilesarchive extends block_base {
                 if (!$file->is_directory()) {
                     $filepath = $file->get_filepath();
                     $filename = $file->get_filename();
-                    $fileuserid = $file->get_userid();
-                    if (!$fileuserid) {
-                        $fileuserid = '0';
-                    }
-                    $thedir = $fileuserid.'/'.$courseid.$filepath;
+                    $thedir = 'course/'.$courseid.$filepath;
 
                     // Ensure the destination path exists.
                     $thepathparts = explode('/', $thedir);
@@ -147,7 +143,12 @@ class block_coursefilesarchive extends block_base {
                         }                        
                     }
 
-                    $file->copy_content_to($blockarchivefolder.$thedir.$filename); 
+                    // Timestamp.
+                    $timemodified = $file->get_timemodified();
+                    $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
+
+                    // Copy content.
+                    $file->copy_content_to($blockarchivefolder.$thedir.$timestamp.'_'.$filename); 
                 }
             }
             redirect($redirecturl);
