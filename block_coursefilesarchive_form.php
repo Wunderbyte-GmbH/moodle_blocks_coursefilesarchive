@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/formslib.php");
 
 class block_coursefilesarchive_edit_form extends moodleform {
-    function definition() {
+    public function definition() {
         $mform = $this->_form;
 
         $data = $this->_customdata['data'];
@@ -42,23 +41,23 @@ class block_coursefilesarchive_edit_form extends moodleform {
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
         $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('files'), null, $options);
-        $submit_string = get_string('savechanges');
-        $this->add_action_buttons(true, $submit_string);
+        $submit = get_string('savechanges');
+        $this->add_action_buttons(true, $submit);
 
         $this->set_data($data);
     }
 }
 
 class block_coursefilesarchive_update_form extends moodleform {
-    function definition() {
+    public function definition() {
         $mform = $this->_form;
 
         $data = $this->_customdata['data'];
 
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
-        $update_string = get_string('updatearchive', 'block_coursefilesarchive');
-        $this->add_action_buttons(false, $update_string);
+        $update = get_string('updatearchive', 'block_coursefilesarchive');
+        $this->add_action_buttons(false, $update);
 
         $this->set_data($data);
     }

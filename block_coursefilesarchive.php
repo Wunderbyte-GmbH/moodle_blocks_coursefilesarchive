@@ -25,7 +25,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//require('../../config.php');
+defined('MOODLE_INTERNAL') || die();
+
 require_once("$CFG->dirroot/blocks/coursefilesarchive/block_coursefilesarchive_form.php");
 require_once("$CFG->dirroot/repository/lib.php");
 
@@ -67,14 +68,28 @@ class block_coursefilesarchive extends block_base {
         $data->id = $this->page->course->id;
         $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes);
         $options = array('subdirs' => 1, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*');
-        file_prepare_standard_filemanager($data, 'coursefilesarchive', $options, $context, 'block_coursefilesarchive', 'course', $this->page->course->id);
+        file_prepare_standard_filemanager(
+            $data,
+            'coursefilesarchive',
+            $options,
+            $context,
+            'block_coursefilesarchive',
+            'course',
+            $this->page->course->id);
 
         $mform = new block_coursefilesarchive_edit_form(null, array('data' => $data, 'options' => $options));
         $redirecturl = course_get_url($this->page->course->id);
         if ($mform->is_cancelled()) {
             redirect($redirecturl);
         } else if ($formdata = $mform->get_data()) {
-            $formdata = file_postupdate_standard_filemanager($formdata, 'coursefilesarchive', $options, $context, 'block_coursefilesarchive', 'course', $this->page->course->id);
+            $formdata = file_postupdate_standard_filemanager(
+                $formdata,
+                'coursefilesarchive',
+                $options,
+                $context, 
+                'block_coursefilesarchive',
+                'course', 
+                $this->page->course->id);
 
             redirect($redirecturl);
         }
@@ -122,7 +137,7 @@ class block_coursefilesarchive extends block_base {
                         $depth .= $pathpart.'/';
                         if (!is_dir($blockarchivefolder.$depth)) {
                             mkdir($blockarchivefolder.$depth, 0770, true);
-                        }                        
+                        }
                     }
 
                     // Timestamp.
@@ -130,7 +145,7 @@ class block_coursefilesarchive extends block_base {
                     $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
 
                     // Copy content.
-                    $file->copy_content_to($blockarchivefolder.$thedir.$timestamp.'_'.$filename); 
+                    $file->copy_content_to($blockarchivefolder.$thedir.$timestamp.'_'.$filename);
                 }
             }
             redirect($redirecturl);
