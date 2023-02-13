@@ -173,7 +173,7 @@ class block_coursefilesarchive extends block_base {
      * Allow multiple instances of the block.
      */
     public function instance_allow_multiple() {
-        return true;
+        return false;
     }
 
     /**
