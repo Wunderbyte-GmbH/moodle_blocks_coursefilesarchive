@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 $capabilities = array(
     // Specified user can add to courses.
     'block/coursefilesarchive:addinstance' => array(
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'riskbitmask' => RISK_DATALOSS | RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
