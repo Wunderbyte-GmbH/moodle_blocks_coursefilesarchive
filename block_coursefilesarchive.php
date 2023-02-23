@@ -159,11 +159,14 @@ class block_coursefilesarchive extends block_base {
      * This is a list of places where the block may or may not be added.
      */
     public function applicable_formats() {
+        global $PAGE;
+        $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
+        $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
         return array(
             'all' => false,
             'site' => false,
             'site-index' => false,
-            'course-view' => true,
+            'course-view' => $canaddtocourse,
             'mod' => false,
             'my' => false
         );
