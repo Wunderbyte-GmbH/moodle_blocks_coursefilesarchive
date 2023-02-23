@@ -37,5 +37,25 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('block_coursefilesarchive/archivelocation',
         get_string('archivelocation', 'block_coursefilesarchive'),
         get_string('archivelocationdesc', 'block_coursefilesarchive'),
-        'repository/archive', PARAM_PATH));
+        'repository/archive', PARAM_PATH)
+    );
+
+    // Categories to show the blocks in.
+    $name = 'block_coursefilesarchive/blockcategories';
+    $title = get_string('blockcategories', 'block_coursefilesarchive');
+    $description = get_string('blockcategoriesdesc', 'block_coursefilesarchive');
+    //$categories = core_course_category::make_categories_list();
+    $choices = array();
+    $topcategories = core_course_category::get(0)->get_children(); // Parent = 0 i.e. top-level categories only.
+    foreach ($topcategories as $topcategory) {
+        $choices[$topcategory->id] = $topcategory->name;
+        $children = $topcategory->get_children();
+        foreach ($children as $child) {
+            $choices[$child->id] = $topcategory->name.' / '.$child->name;
+        }
+    }
+    $default = array();
+        
+    $settings->add(new admin_setting_configmultiselect($name, $title, $description, $default, $choices));
+    
 }
