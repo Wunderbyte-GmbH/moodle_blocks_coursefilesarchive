@@ -27,6 +27,8 @@
 
 namespace block_coursefilesarchive;
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/blocklib.php');
 
 /**
@@ -49,7 +51,7 @@ class admin_setting_categoryconfigmultiselect extends \admin_setting_configmulti
             $newvalues = $this->get_setting();
 
             $removedcats = array(); // Array of removed category id's from the setting.
-            foreach($originalcats as $originalcat) {
+            foreach ($originalcats as $originalcat) {
                 if (!in_array($originalcat, $newvalues)) {
                     $removedcats[] = $originalcat;
                 }
@@ -67,14 +69,14 @@ class admin_setting_categoryconfigmultiselect extends \admin_setting_configmulti
                 $blockinstances = $DB->get_recordset('block_instances', array('blockname' => 'coursefilesarchive'));
                 if (!empty($blockinstances)) {
                     $blockinstancesparentcontext = array();
-                    foreach($blockinstances as $blockinstance) {
+                    foreach ($blockinstances as $blockinstance) {
                         $blockinstancesparentcontext[$blockinstance->parentcontextid] = $blockinstance->id;
                     }
                     $blockstodelete = array();
-                    foreach($removedcats as $removedcat) {
+                    foreach ($removedcats as $removedcat) {
                         $category = \core_course_category::get($removedcat);
                         $catcourses = $category->get_courses();
-                        foreach($catcourses as $catcourse) {
+                        foreach ($catcourses as $catcourse) {
                             $catcoursescontextid = $catcourse->get_context()->id;
                             if (array_key_exists($catcoursescontextid, $blockinstancesparentcontext)) {
                                 $blockstodelete[] = $blockinstancesparentcontext[$catcoursescontextid];

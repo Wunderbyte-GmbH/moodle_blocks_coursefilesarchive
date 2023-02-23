@@ -57,5 +57,4 @@ if ($ADMIN->fulltree) {
     $settings->add(new \block_coursefilesarchive\admin_setting_categoryconfigmultiselect(
         $name, $title, $description, $default, $choices)
     );
-    
 }

@@ -98,7 +98,8 @@ class block_coursefilesarchive extends block_base {
 
         $this->content->footer = '';
 
-        // Returns an array of `stored_file` instances - ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area.
+        /* Returns an array of `stored_file` instances.
+           Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
         $fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
 
@@ -159,9 +160,8 @@ class block_coursefilesarchive extends block_base {
      * This is a list of places where the block may or may not be added.
      */
     public function applicable_formats() {
-        global $PAGE;
         $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-        $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
+        $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
         return array(
             'all' => false,
             'site' => false,
