@@ -44,7 +44,6 @@ if ($ADMIN->fulltree) {
     $name = 'block_coursefilesarchive/blockcategories';
     $title = get_string('blockcategories', 'block_coursefilesarchive');
     $description = get_string('blockcategoriesdesc', 'block_coursefilesarchive');
-    //$categories = core_course_category::make_categories_list();
     $choices = array();
     $topcategories = core_course_category::get(0)->get_children(); // Parent = 0 i.e. top-level categories only.
     foreach ($topcategories as $topcategory) {
@@ -55,7 +54,8 @@ if ($ADMIN->fulltree) {
         }
     }
     $default = array();
-        
-    $settings->add(new admin_setting_configmultiselect($name, $title, $description, $default, $choices));
+    $settings->add(new \block_coursefilesarchive\admin_setting_categoryconfigmultiselect(
+        $name, $title, $description, $default, $choices)
+    );
     
 }
