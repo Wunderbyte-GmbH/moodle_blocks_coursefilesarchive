@@ -101,15 +101,14 @@ class block_coursefilesarchive extends block_base {
         /* Returns an array of `stored_file` instances.
            Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
         $fs = get_file_storage();
-        $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $this->page->course->id);
+        $courseid = $this->page->course->id;
+        $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $courseid);
 
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
             // Get the folder for the files.
             $toolbox = \block_coursefilesarchive\toolbox::get_instance();
             $blockarchivefolder = $toolbox->$blockarchivefolder();
-
-            $courseid = $this->page->course->id;
 
             // Copy the files.
             foreach ($files as $file) {
