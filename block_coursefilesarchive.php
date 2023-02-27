@@ -105,23 +105,10 @@ class block_coursefilesarchive extends block_base {
 
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
         if ($formdata = $uform->get_data()) {
-            // Make the folder for the files.
-            $archivelocation = get_config('block_coursefilesarchive', 'archivelocation');
-            if (!empty($archivelocation)) {
-                if ($archivelocation[0] != '/') {
-                    $archivelocation = '/'.$archivelocation;
-                }
-                if ($archivelocation[strlen($archivelocation) - 1] != '/') {
-                    $archivelocation = $archivelocation.'/';
-                }
-            } else {
-                // Use default.
-                $archivelocation = '/repository/archive/';
-            }
-            $blockarchivefolder = $CFG->dataroot.$archivelocation;
-            if (!is_dir($blockarchivefolder)) {
-                mkdir($blockarchivefolder, 0770, true);
-            }
+            // Get the folder for the files.
+            $toolbox = \block_coursefilesarchive\toolbox::get_instance();
+            $blockarchivefolder = $toolbox->$blockarchivefolder();
+
             $courseid = $this->page->course->id;
 
             // Copy the files.
