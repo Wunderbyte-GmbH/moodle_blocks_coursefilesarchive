@@ -84,4 +84,34 @@ class toolbox {
 
         return $blockarchivefolder;
     }
+
+    public function filecompare($courseid, $contextid) {
+        $fs = get_file_storage();
+
+        $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
+        $blockarchivefolder = $this->getarchivefolder();
+
+        $areafiles = array();
+        foreach ($files as $file) {
+            if (!$file->is_directory()) {
+                $areafiles[] = $file->get_filepath().$file->get_filename();
+            }
+        }
+
+        $archivefiles = array();
+        $this->archivewalk($blockarchivefolder, $archivefiles);
+
+        error_log('filecompare'); // Statement for xDebug breakpoint.
+    }
+
+    private function archivewalk($root, &$archivefiles) {
+        $iterator = new \FilesystemIterator($root);
+        foreach($iterator as $entry) {
+            if ($entry->isDir()) {
+                $this->archivewalk($entry->getPathname(), $archivefiles);
+            } else {
+                $archivefiles[] = $entry->getPathname();
+            }
+        }
+    }
 }

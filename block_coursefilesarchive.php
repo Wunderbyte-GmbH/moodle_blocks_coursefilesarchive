@@ -108,7 +108,7 @@ class block_coursefilesarchive extends block_base {
         if ($formdata = $uform->get_data()) {
             // Get the folder for the files.
             $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-            $blockarchivefolder = $toolbox->$blockarchivefolder();
+            $blockarchivefolder = $toolbox->getarchivefolder();
 
             // Copy the files.
             foreach ($files as $file) {
@@ -138,6 +138,10 @@ class block_coursefilesarchive extends block_base {
             redirect($redirecturl);
         }
         $this->content->text .= $uform->render();
+
+        // TEMPORARY CODE FOR DEVELOPMENT.
+        $toolbox = \block_coursefilesarchive\toolbox::get_instance();
+        $toolbox->filecompare($courseid, $context->id);
 
         return $this->content;
     }
