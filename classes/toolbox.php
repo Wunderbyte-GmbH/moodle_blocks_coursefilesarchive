@@ -102,23 +102,31 @@ class toolbox {
         $areafiles = array();
         foreach ($files as $file) {
             if (!$file->is_directory()) {
-                $areafiles[] = $file->get_filepath().$file->get_filename();
+                // Timestamp.
+                $timemodified = $file->get_timemodified();
+                $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
+
+                $areafiles[] = $file->get_filepath().$timestamp.'_'.$file->get_filename();
             }
         }
 
         $archivefiles = array();
-        $this->archivewalk($blockarchivefolder, $archivefiles);
+        $this->archivewalk($blockarchivefolder, $blockarchivefolder, $archivefiles);
 
-        error_log('filecompare'); // Statement for xDebug breakpoint.
+
+        debugging('filecompare'); // Statement for xDebug breakpoint.
     }
 
-    private function archivewalk($root, &$archivefiles) {
+    private function archivewalk($blockarchivefolder, $root, &$archivefiles) {
         $iterator = new \FilesystemIterator($root);
-        foreach($iterator as $entry) {
+        foreach ($iterator as $entry) {
             if ($entry->isDir()) {
-                $this->archivewalk($entry->getPathname(), $archivefiles);
+                $this->archivewalk($blockarchivefolder, $entry->getPathname(), $archivefiles);
             } else {
-                $archivefiles[] = $entry->getPathname();
+                $thefile = $entry->getPathname();
+                $thefile = str_replace($blockarchivefolder, '', $thefile);
+                $thefile = str_replace('\\', '/', $thefile);
+                $archivefiles[] = $thefile;
             }
         }
     }
