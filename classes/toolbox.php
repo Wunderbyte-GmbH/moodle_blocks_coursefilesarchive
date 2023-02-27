@@ -59,10 +59,11 @@ class toolbox {
 
     /**
      * Gets the archive folder and creates it if it does not exist.
+     * @param int $courseid The Course id.
      *
      * @return string The toolbox instance.
      */
-    public function getarchivefolder() {
+    public function getarchivefolder($courseid) {
         global $CFG;
 
         $archivelocation = get_config('block_coursefilesarchive', 'archivelocation');
@@ -77,19 +78,26 @@ class toolbox {
             // Use default.
             $archivelocation = '/repository/archive/';
         }
-        $blockarchivefolder = $CFG->dataroot.$archivelocation;
-        if (!is_dir($blockarchivefolder)) {
-            mkdir($blockarchivefolder, 0770, true);
+        $blockarchivefolder = $archivelocation.'course/'.$courseid;
+
+        // Ensure the destination path exists.
+        $thepathparts = explode('/', $blockarchivefolder);
+        $depth = '';
+        foreach ($thepathparts as $pathpart) {
+            $depth .= $pathpart.'/';
+            if (!is_dir($CFG->dataroot.$depth)) {
+                mkdir($CFG->dataroot.$depth, 0770, true);
+            }
         }
 
-        return $blockarchivefolder;
+        return $CFG->dataroot.$blockarchivefolder;
     }
 
     public function filecompare($courseid, $contextid) {
         $fs = get_file_storage();
 
         $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
-        $blockarchivefolder = $this->getarchivefolder();
+        $blockarchivefolder = $this->getarchivefolder($courseid);
 
         $areafiles = array();
         foreach ($files as $file) {

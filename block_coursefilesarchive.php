@@ -108,17 +108,16 @@ class block_coursefilesarchive extends block_base {
         if ($formdata = $uform->get_data()) {
             // Get the folder for the files.
             $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-            $blockarchivefolder = $toolbox->getarchivefolder();
+            $blockarchivefolder = $toolbox->getarchivefolder($courseid);
 
             // Copy the files.
             foreach ($files as $file) {
                 if (!$file->is_directory()) {
                     $filepath = $file->get_filepath();
                     $filename = $file->get_filename();
-                    $thedir = 'course/'.$courseid.$filepath;
 
                     // Ensure the destination path exists.
-                    $thepathparts = explode('/', $thedir);
+                    $thepathparts = explode('/', $filepath);
                     $depth = '';
                     foreach ($thepathparts as $pathpart) {
                         $depth .= $pathpart.'/';
@@ -132,7 +131,7 @@ class block_coursefilesarchive extends block_base {
                     $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
 
                     // Copy content.
-                    $file->copy_content_to($blockarchivefolder.$thedir.$timestamp.'_'.$filename);
+                    $file->copy_content_to($blockarchivefolder.$filepath.$timestamp.'_'.$filename);
                 }
             }
             redirect($redirecturl);
