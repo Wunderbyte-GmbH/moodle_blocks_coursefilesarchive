@@ -100,19 +100,21 @@ class toolbox {
         $blockarchivefolder = $this->getarchivefolder($courseid);
 
         $areafiles = array();
+        $areafilescfa = array();
         foreach ($files as $file) {
             if (!$file->is_directory()) {
                 // Timestamp.
-                $timemodified = $file->get_timemodified();
-                $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
+                $timestamp = cfafile::gettimestamp($file->get_timemodified());
 
-                $areafiles[] = $file->get_filepath().$timestamp.'_'.$file->get_filename();
+                $areafiles[] = $file->get_filepath().$timestamp.$file->get_filename();
             }
         }
 
         $archivefiles = array();
         $this->archivewalk($blockarchivefolder, $blockarchivefolder, $archivefiles);
 
+        $archivefilescfa = array();
+        $this->archivewalkcfa($blockarchivefolder, $blockarchivefolder, $archivefilescfa);
 
         debugging('filecompare'); // Statement for xDebug breakpoint.
     }
@@ -127,6 +129,27 @@ class toolbox {
                 $thefile = str_replace($blockarchivefolder, '', $thefile);
                 $thefile = str_replace('\\', '/', $thefile);
                 $archivefiles[] = $thefile;
+            }
+        }
+    }
+
+    private function archivewalkcfa($blockarchivefolder, $root, &$archivefiles) {
+        $iterator = new \FilesystemIterator($root);
+        foreach ($iterator as $entry) {
+            if ($entry->isDir()) {
+                $this->archivewalkcfa($blockarchivefolder, $entry->getPathname(), $archivefiles);
+            } else {
+                $thepath = $entry->getPath();
+                $thepath = str_replace($blockarchivefolder, '', $thepath);
+                $thepath = str_replace('\\', '/', $thepath);
+                $cfafile = new cfafile(
+                    $entry->getFilename(),
+                    $thepath,
+                    $entry->getMTime(),
+                    !$entry->isWritable(),
+                    true
+                );
+                $archivefiles[] = $cfafile;
             }
         }
     }

@@ -127,11 +127,10 @@ class block_coursefilesarchive extends block_base {
                     }
 
                     // Timestamp.
-                    $timemodified = $file->get_timemodified();
-                    $timestamp = userdate($timemodified, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
+                    $timestamp = \block_coursefilesarchive\cfafile::gettimestamp($file->get_timemodified());
 
                     // Copy content.
-                    $file->copy_content_to($blockarchivefolder.$filepath.$timestamp.'_'.$filename);
+                    $file->copy_content_to($blockarchivefolder.$filepath.$timestamp.$filename);
                 }
             }
             redirect($redirecturl);
