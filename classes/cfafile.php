@@ -45,7 +45,7 @@ class cfafile {
     private $filename = '';
 
     /**
-     * @var int File timestamp.
+     * @var string File timestamp.
      */
     private $timestamp = '';
 
@@ -62,12 +62,11 @@ class cfafile {
      *                     And use Unix directory separator of the forward slash.
      * @param int $timestamp The timestamp.
      * @param boolean $readonly Read only?
-     * @param boolean $removetimestamp Remove the timestamp from the filename?
      */
-    public function __construct($filename, $path, $timestamp, $readonly, $removetimestamp = false) {
-        if ($removetimestamp) {
-            $timestampstring = self::gettimestamp($timestamp);
-            $filename = str_replace($timestampstring, '', $filename);
+    public function __construct($filename, $path, $timestamp, $readonly) {
+        if (empty($timestamp)) {
+            $timestamp = substr($filename, 0, strpos($filename, '_'));
+            $filename = str_replace($timestamp.'_', '', $filename);
         }
         $this->filename = $filename;
         $this->path = explode('/', $path);
@@ -79,10 +78,15 @@ class cfafile {
      * Gets the time stamp from the time.
      *
      * @param int $time The time.
+     * @param boolean $sep Add the separator.
      *
      * @return string The timestamp.
      */
-    public static function gettimestamp($time) {
-        return userdate($time, "%F-%H-%M").'_'; // Ref: https://www.php.net/manual/en/function.strftime.php.
+    public static function gettimestamp($time, $sep = true) {
+        $timestamp = userdate($time, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
+        if ($sep) {
+            $timestamp .= '_';
+        }
+        return $timestamp;
     }
 }

@@ -107,6 +107,15 @@ class toolbox {
                 $timestamp = cfafile::gettimestamp($file->get_timemodified());
 
                 $areafiles[] = $file->get_filepath().$timestamp.$file->get_filename();
+
+                $timestamp = cfafile::gettimestamp($file->get_timemodified(), false);
+                $cfafile = new cfafile(
+                    $file->get_filename(),
+                    $file->get_filepath(),
+                    $timestamp,
+                    false
+                );
+                $areafilescfa[] = $cfafile;
             }
         }
 
@@ -145,9 +154,8 @@ class toolbox {
                 $cfafile = new cfafile(
                     $entry->getFilename(),
                     $thepath,
-                    $entry->getMTime(),
-                    !$entry->isWritable(),
-                    true
+                    '',
+                    !$entry->isWritable()
                 );
                 $archivefiles[] = $cfafile;
             }
