@@ -69,7 +69,10 @@ class cfafile {
             $filename = str_replace($timestamp.'_', '', $filename);
         }
         $this->filename = $filename;
-        $this->path = explode('/', $path);
+        $pathtrimmed = trim($path, '/');
+        if (!empty($pathtrimmed)) {
+            $this->path = explode('/', $pathtrimmed);
+        }
         $this->timestamp = $timestamp;
         $this->readonly = $readonly;
     }
