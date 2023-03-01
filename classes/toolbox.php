@@ -125,6 +125,14 @@ class toolbox {
         $archivefilescfa = array();
         $this->archivewalkcfa($blockarchivefolder, $blockarchivefolder, $archivefilescfa);
 
+        // Sort the file arrays.
+        if (!empty($areafilescfa)) {
+            usort($areafilescfa, '\block_coursefilesarchive\cfafile::compare');
+        }
+        if (!empty($archivefilescfa)) {
+            usort($archivefilescfa, '\block_coursefilesarchive\cfafile::compare');
+        }
+
         debugging('filecompare'); // Statement for xDebug breakpoint.
     }
 

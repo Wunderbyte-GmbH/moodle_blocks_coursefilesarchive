@@ -78,6 +78,68 @@ class cfafile {
     }
 
     /**
+     * File compare.
+     *
+     * @param cfafile $filea File a.
+     * @param cfafile $fileb File b.
+     *
+     * @return int The comparision between the two, where -1 is less, 0 is equal and +1 is greater.
+     */
+    public static function compare($filea, $fileb) {
+        // Path compare.
+        if ((empty($filea->path)) && (!empty($fileb->path))) {
+            return -1;
+        } else if ((!empty($filea->path)) && (empty($fileb->path))) {
+            return 1;
+        } else if ((!empty($filea->path)) && (!empty($fileb->path))) {
+            // Path compare.
+            $index = 0;
+            while ((!empty($filea->path[$index])) && (!empty($fileb->path[$index]))) {
+                if ($filea->path[$index] == $fileb->path[$index]) {
+                    // Compare the next level.
+                    $index++;
+                    if ((empty($filea->path[$index])) && (!empty($fileb->path[$index]))) {
+                        return -1;
+                    } else if ((!empty($filea->path[$index])) && (empty($fileb->path[$index]))) {
+                        return 1;
+                    }
+                } else {
+                    $alen = strlen($filea->path[$index]);
+                    $blen = strlen($fileb->path[$index]);
+                    
+                    if ($alen < $blen) {
+                        return -1;
+                    } else if ($alen > $blen) {
+                        return 1;
+                    } // Same length path.
+
+                    if ($filea->path[$index] < $fileb->path[$index]) {
+                        return -1;
+                    }
+                    // Logically now 'a' must be greater than 'b' as equal case already done.
+                    return 1;
+                }
+            }
+        } // Else both paths are empty so file is in the root.
+
+        // File and time stamp compare.
+        if ($filea->filename < $fileb->filename) {
+            return -1;
+        } else if ($filea->filename > $fileb->filename) {
+            return 1;
+        }
+
+        // This is a string compare!  So not sure if will be correct!  May need to convert back to Unix epoch integer.
+        if ($filea->timestamp < $fileb->timestamp) {
+            return -1;
+        } else if ($filea->timestamp > $fileb->timestamp) {
+            return 1;
+        }
+        // Equal!
+        return 0;
+    }
+
+    /**
      * Gets the time stamp from the time.
      *
      * @param int $time The time.
