@@ -93,22 +93,26 @@ class toolbox {
         return $CFG->dataroot.$blockarchivefolder;
     }
 
+    /**
+     * Compares the course files and archive.
+     *
+     * @param int $courseid The course id.
+     * @param int $contextid The context id.
+     *
+     * @return array Array of sorted cfafile objects (if any) with their CFA state set.
+     */
     public function filecompare($courseid, $contextid) {
         $fs = get_file_storage();
 
         $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
         $blockarchivefolder = $this->getarchivefolder($courseid);
 
-        $areafiles = array();
         $areafilescfa = array();
         foreach ($files as $file) {
             if (!$file->is_directory()) {
                 // Timestamp.
-                $timestamp = cfafile::gettimestamp($file->get_timemodified());
-
-                $areafiles[] = $file->get_filepath().$timestamp.$file->get_filename();
-
                 $timestamp = cfafile::gettimestamp($file->get_timemodified(), false);
+
                 $cfafile = new cfafile(
                     $file->get_filename(),
                     $file->get_filepath(),
@@ -117,9 +121,6 @@ class toolbox {
                 $areafilescfa[] = $cfafile;
             }
         }
-
-        $archivefiles = array();
-        $this->archivewalk($blockarchivefolder, $blockarchivefolder, $archivefiles);
 
         $archivefilescfa = array();
         $this->archivewalkcfa($blockarchivefolder, $blockarchivefolder, $archivefilescfa);
@@ -167,8 +168,8 @@ class toolbox {
             $compareoutfiles[] = $archivefilescfa[$archivefilesindex];
             $archivefilesindex++;
         }
-        
-        debugging('filecompare'); // Statement for xDebug breakpoint.
+
+        return $compareoutfiles;
     }
 
     private function archivewalk($blockarchivefolder, $root, &$archivefiles) {

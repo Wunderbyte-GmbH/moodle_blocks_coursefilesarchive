@@ -142,7 +142,7 @@ class block_coursefilesarchive extends block_base {
 
         // TEMPORARY CODE FOR DEVELOPMENT.
         $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-        $toolbox->filecompare($courseid, $context->id);
+        $cfafiles = $toolbox->filecompare($courseid, $context->id);
 
         return $this->content;
     }

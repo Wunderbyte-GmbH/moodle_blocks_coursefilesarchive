@@ -110,7 +110,7 @@ class cfafile {
                 } else {
                     $alen = strlen($filea->path[$index]);
                     $blen = strlen($fileb->path[$index]);
-                    
+
                     if ($alen < $blen) {
                         return -1;
                     } else if ($alen > $blen) {
