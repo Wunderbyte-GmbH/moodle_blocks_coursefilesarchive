@@ -45,5 +45,10 @@
 
 <div class="container">
     <h5>{{heading}}</h5>
+    <ul>
+    {{#cfafiles}}
+        <li>{{pathname}} - {{state}} - {{timestamp}}</li>
+    {{/cfafiles}}
+    </ul>
     <p><a href="{{{returnlink}}}">{{#str}}returncourse, block_superframe{{/str}}</a></p>
 </div>

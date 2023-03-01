@@ -28,6 +28,7 @@
 namespace block_coursefilesarchive\output;
 
 use moodle_url;
+use stdClass;
 
 class filecompare implements \renderable, \templatable {
 
@@ -42,7 +43,7 @@ class filecompare implements \renderable, \templatable {
     public function export_for_template(\renderer_base $output) {
         global $USER;
 
-        $data = new \stdClass();
+        $data = new stdClass();
 
         // Page heading and iframe data.
         $data->heading = get_string('pluginname', 'block_coursefilesarchive');
@@ -50,6 +51,15 @@ class filecompare implements \renderable, \templatable {
         // TEMPORARY CODE FOR DEVELOPMENT.
         $toolbox = \block_coursefilesarchive\toolbox::get_instance();
         $cfafiles = $toolbox->filecompare($this->courseid, $this->blockcontextid);
+        $data->cfafiles = array();
+        foreach ($cfafiles as $cfafile) {
+            $entry = new stdClass();
+            $entry->pathname = $cfafile->getpathname();
+            $entry->state = $cfafile->getstate();
+            $entry->timestamp = $cfafile->gettimestamp();
+
+            $data->cfafiles[] = $entry;
+        }
 
         $data->returnlink = new moodle_url('/course/view.php', ['id' => $this->courseid]);
 

@@ -68,17 +68,18 @@ class cfafile {
      * @param int $timestamp The timestamp.
      * @param boolean $readonly Read only?
      */
-    public function __construct($filename, $path, $timestamp) {
+    public function __construct($filename, $path, $timestamp = null) {
         if (empty($timestamp)) {
-            $timestamp = substr($filename, 0, strpos($filename, '_'));
-            $filename = str_replace($timestamp.'_', '', $filename);
+            $this->timestamp = substr($filename, 0, strpos($filename, '_'));
+            $filename = str_replace($this->timestamp.'_', '', $filename);
+        } else {
+            $this->timestamp = self::createtimestamp($timestamp, false);
         }
         $this->filename = $filename;
         $pathtrimmed = trim($path, '/');
         if (!empty($pathtrimmed)) {
             $this->path = explode('/', $pathtrimmed);
         }
-        $this->timestamp = $timestamp;
     }
 
     /**
@@ -144,14 +145,14 @@ class cfafile {
     }
 
     /**
-     * Gets the time stamp from the time.
+     * Creates the time stamp from the time.
      *
      * @param int $time The time.
      * @param boolean $sep Add the separator.
      *
      * @return string The timestamp.
      */
-    public static function gettimestamp($time, $sep = true) {
+    public static function createtimestamp($time, $sep = true) {
         $timestamp = userdate($time, "%F-%H-%M"); // Ref: https://www.php.net/manual/en/function.strftime.php.
         if ($sep) {
             $timestamp .= '_';
@@ -185,5 +186,24 @@ class cfafile {
             default:
                 throw new \moodle_exception('invalidcfastate', 'block_coursefilesarchive', '', $state);
         }
+    }
+
+    /**
+     * Gets the path and filename
+     *
+     * @return string The pathname.
+     */
+    public function getpathname() {
+        $retr = '';
+        if (!empty($this->path)) {
+            $retr = '/'.implode('/', $this->path);
+        }
+        $retr .= '/'.$this->filename;
+
+        return $retr;
+    }
+
+    public function gettimestamp() {
+        return $this->timestamp;
     }
 }

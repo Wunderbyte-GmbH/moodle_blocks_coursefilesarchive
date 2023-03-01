@@ -105,7 +105,7 @@ class renderer extends \plugin_renderer_base {
                         }
 
                         // Timestamp.
-                        $timestamp = \block_coursefilesarchive\cfafile::gettimestamp($file->get_timemodified());
+                        $timestamp = \block_coursefilesarchive\cfafile::createtimestamp($file->get_timemodified());
 
                         // Copy content if new file.
                         $thefile = $blockarchivefolder.$filepath.$timestamp.$filename;

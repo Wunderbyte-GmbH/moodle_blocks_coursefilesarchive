@@ -110,13 +110,10 @@ class toolbox {
         $areafilescfa = array();
         foreach ($files as $file) {
             if (!$file->is_directory()) {
-                // Timestamp.
-                $timestamp = cfafile::gettimestamp($file->get_timemodified(), false);
-
                 $cfafile = new cfafile(
                     $file->get_filename(),
                     $file->get_filepath(),
-                    $timestamp
+                    $file->get_timemodified()
                 );
                 $areafilescfa[] = $cfafile;
             }
@@ -172,20 +169,6 @@ class toolbox {
         return $compareoutfiles;
     }
 
-    private function archivewalk($blockarchivefolder, $root, &$archivefiles) {
-        $iterator = new \FilesystemIterator($root);
-        foreach ($iterator as $entry) {
-            if ($entry->isDir()) {
-                $this->archivewalk($blockarchivefolder, $entry->getPathname(), $archivefiles);
-            } else {
-                $thefile = $entry->getPathname();
-                $thefile = str_replace($blockarchivefolder, '', $thefile);
-                $thefile = str_replace('\\', '/', $thefile);
-                $archivefiles[] = $thefile;
-            }
-        }
-    }
-
     private function archivewalkcfa($blockarchivefolder, $root, &$archivefiles) {
         $iterator = new \FilesystemIterator($root);
         foreach ($iterator as $entry) {
@@ -197,9 +180,7 @@ class toolbox {
                 $thepath = str_replace('\\', '/', $thepath);
                 $cfafile = new cfafile(
                     $entry->getFilename(),
-                    $thepath,
-                    '',
-                    !$entry->isWritable()
+                    $thepath
                 );
                 $archivefiles[] = $cfafile;
             }
