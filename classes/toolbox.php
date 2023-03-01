@@ -112,8 +112,7 @@ class toolbox {
                 $cfafile = new cfafile(
                     $file->get_filename(),
                     $file->get_filepath(),
-                    $timestamp,
-                    false
+                    $timestamp
                 );
                 $areafilescfa[] = $cfafile;
             }
@@ -133,6 +132,42 @@ class toolbox {
             usort($archivefilescfa, '\block_coursefilesarchive\cfafile::compare');
         }
 
+        // Create the compare output.
+        $compareoutfiles = array();
+        $coursefilesindex = 0;
+        $archivefilesindex = 0;
+
+        while ((!empty($areafilescfa[$coursefilesindex])) && (!empty($archivefilescfa[$archivefilesindex]))) {
+            $compareresult = cfafile::compare($areafilescfa[$coursefilesindex], $archivefilescfa[$archivefilesindex]);
+
+            if ($compareresult == -1) {
+                $areafilescfa[$coursefilesindex]->setstate(cfafile::CFA_COURSE);
+                $compareoutfiles[] = $areafilescfa[$coursefilesindex];
+                $coursefilesindex++;
+            } else if ($compareoutfiles == 1) {
+                $archivefilescfa[$archivefilesindex]->setstate(cfafile::CFA_ARCHIVE);
+                $compareoutfiles[] = $archivefilescfa[$archivefilesindex];
+                $archivefilesindex++;
+            } else {
+                $areafilescfa[$coursefilesindex]->setstate(cfafile::CFA_COURSE_ARCHIVE);
+                $archivefilescfa[$archivefilesindex]->setstate(cfafile::CFA_COURSE_ARCHIVE);
+                $compareoutfiles[] = $areafilescfa[$coursefilesindex];
+                $coursefilesindex++;
+                $archivefilesindex++;
+            }
+        }
+        // We should now only have possibly remaining files in either array.
+        while (!empty($areafilescfa[$coursefilesindex])) {
+            $areafilescfa[$coursefilesindex]->setstate(cfafile::CFA_COURSE);
+            $compareoutfiles[] = $areafilescfa[$coursefilesindex];
+            $coursefilesindex++;
+        }
+        while (!empty($archivefilescfa[$archivefilesindex])) {
+            $archivefilescfa[$archivefilesindex]->setstate(cfafile::CFA_ARCHIVE);
+            $compareoutfiles[] = $archivefilescfa[$archivefilesindex];
+            $archivefilesindex++;
+        }
+        
         debugging('filecompare'); // Statement for xDebug breakpoint.
     }
 

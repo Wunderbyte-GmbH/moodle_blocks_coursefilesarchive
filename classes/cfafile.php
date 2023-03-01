@@ -49,10 +49,15 @@ class cfafile {
      */
     private $timestamp = '';
 
+    public const CFA_UNKNOWN = 0;
+    public const CFA_COURSE_ARCHIVE = 1;
+    public const CFA_ARCHIVE = 2;
+    public const CFA_COURSE = 3;
+
     /**
-     * @var boolean Read only?
+     * @var int State of the file as per the CFA constants.
      */
-    private $readonly = false;
+    private $state = self::CFA_UNKNOWN;
 
     /**
      * Constructor.
@@ -63,7 +68,7 @@ class cfafile {
      * @param int $timestamp The timestamp.
      * @param boolean $readonly Read only?
      */
-    public function __construct($filename, $path, $timestamp, $readonly) {
+    public function __construct($filename, $path, $timestamp) {
         if (empty($timestamp)) {
             $timestamp = substr($filename, 0, strpos($filename, '_'));
             $filename = str_replace($timestamp.'_', '', $filename);
@@ -74,7 +79,6 @@ class cfafile {
             $this->path = explode('/', $pathtrimmed);
         }
         $this->timestamp = $timestamp;
-        $this->readonly = $readonly;
     }
 
     /**
@@ -153,5 +157,33 @@ class cfafile {
             $timestamp .= '_';
         }
         return $timestamp;
+    }
+
+    /**
+     * Get the state of the file.
+     *
+     * @return int CFA state.
+     */
+    public function getstate() {
+        return $this->state;
+    }
+
+    /**
+     * Set the state of the file.
+     *
+     * @param int $state CFA state.
+     * @throws moodle_exception If invalid state.
+     */
+    public function setstate($state) {
+        switch ($state) {
+            case self::CFA_UNKNOWN:
+            case self::CFA_COURSE_ARCHIVE:
+            case self::CFA_ARCHIVE:
+            case self::CFA_COURSE:
+                $this->state = $state;
+                break;
+            default:
+                throw new \moodle_exception('invalidcfastate', 'block_coursefilesarchive', '', $state);
+        }
     }
 }

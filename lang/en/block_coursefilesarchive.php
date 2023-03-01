@@ -40,6 +40,9 @@ $string['archivelocationdesc'] = 'The archive location within the Moodle data fo
 $string['blockcategories'] = 'Block categories';
 $string['blockcategoriesdesc'] = 'Allow the the block to be shown in the following categories. Use the \'Ctrl\' key in combination with the mouse to select more than one or none.';
 
+// Errors.
+$string['invalidcfastate'] = 'Invalid CFA state: {$a}.';
+
 // Capability strings.
 $string['coursefilesarchive:addinstance'] = 'Add a new course files archive block';
 
