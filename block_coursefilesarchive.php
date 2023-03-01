@@ -63,8 +63,13 @@ class block_coursefilesarchive extends block_base {
         // Content.
         $this->content = new stdClass();
 
+        $courseid = $this->page->course->id;
         $context = context_block::instance($this->instance->id, MUST_EXIST);
-        $data = new stdClass();
+
+        $renderer = $this->page->get_renderer('block_coursefilesarchive');
+        $this->content->text = $renderer->render_filesform($courseid, $context);
+        
+        /*$data = new stdClass();
         $data->id = $this->page->course->id;
         $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes);
         $options = array('subdirs' => 1, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*');
@@ -94,14 +99,11 @@ class block_coursefilesarchive extends block_base {
             redirect($redirecturl);
         }
 
-        $this->content->text = $mform->render();
-
-        $this->content->footer = '';
+        $this->content->text = $mform->render();*/
 
         /* Returns an array of `stored_file` instances.
            Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
-        $fs = get_file_storage();
-        $courseid = $this->page->course->id;
+        /*$fs = get_file_storage();
         $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $courseid);
 
         $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
@@ -140,7 +142,11 @@ class block_coursefilesarchive extends block_base {
             }
             redirect($redirecturl);
         }
-        $this->content->text .= $uform->render();
+        $this->content->text .= $uform->render();*/
+
+        $this->content->text .= $renderer->render_actionsform($courseid, $context->id);
+
+        $this->content->footer = '';
 
         // TEMPORARY CODE FOR DEVELOPMENT.
         $toolbox = \block_coursefilesarchive\toolbox::get_instance();

@@ -29,6 +29,7 @@
 $string['pluginname'] = 'Course files archive';
 
 $string['updatearchive'] = 'Update archive';
+$string['comparefiles'] = 'Compare files';
 
 // Settings.
 $string['settingsheader'] = 'Course files archive settings';

@@ -27,28 +27,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ namespace block_coursefilesarchive\output;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
 
-class block_coursefilesarchive_edit_form extends moodleform {
-    public function definition() {
-        $mform = $this->_form;
-
-        $data = $this->_customdata['data'];
-        $options = $this->_customdata['options'];
-
-        $mform->addElement('hidden', 'id', $data->id);
-        $mform->setType('id', PARAM_INT);
-        $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('files'), null, $options);
-        $submit = get_string('savechanges');
-        $this->add_action_buttons(true, $submit);
-
-        $this->set_data($data);
-    }
-}
-
-class block_coursefilesarchive_update_form extends moodleform {
+class actions_form extends \moodleform {
     public function definition() {
         $mform = $this->_form;
 
@@ -58,10 +43,10 @@ class block_coursefilesarchive_update_form extends moodleform {
         $mform->setType('id', PARAM_INT);
         //$update = get_string('updatearchive', 'block_coursefilesarchive');
         //$this->add_action_buttons(false, $update);
-        $buttonarray=array();
+        $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
-        $buttonarray[] = $mform->createElement('submit', 'resetbutton', get_string('revert'));
-        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+        $buttonarray[] = $mform->createElement('submit', 'comparefiles', get_string('comparefiles', 'block_coursefilesarchive'));
+        $mform->addGroup($buttonarray, 'buttons', '', ' ', false);
 
         $this->set_data($data);
     }
