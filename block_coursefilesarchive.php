@@ -29,7 +29,6 @@
  * Class coursefilesarchive.
  *
  */
-
 class block_coursefilesarchive extends block_base {
 
     /**

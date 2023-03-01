@@ -81,9 +81,9 @@ class renderer extends \plugin_renderer_base {
         $data->id = $courseid;
         $aform = new actions_form(null, array('data' => $data));
         if ($formdata = $aform->get_data()) {
-            $redirecturl = course_get_url($courseid);
             // What button was pressed?
             if (!empty($formdata->updatearchive)) {
+                $redirecturl = course_get_url($courseid);
                 // Get the folder for the files.
                 $toolbox = \block_coursefilesarchive\toolbox::get_instance();
                 $blockarchivefolder = $toolbox->getarchivefolder($courseid);
@@ -117,12 +117,28 @@ class renderer extends \plugin_renderer_base {
                     }
                 }
             } else if (!empty($formdata->comparefiles)) {
-                // TEMPORARY CODE FOR DEVELOPMENT.
-                $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-                $cfafiles = $toolbox->filecompare($courseid, $contextid);
+                $redirecturl = new \moodle_url('/blocks/coursefilesarchive/filecompare.php',
+                    array('courseid' => $courseid, 'contextid' => $contextid, 'sesskey' => sesskey()));
+                redirect($redirecturl);
+            } else {
+                $redirecturl = course_get_url($courseid);
+                redirect($redirecturl);
             }
-            redirect($redirecturl);
         }
         return $aform->render();
+    }
+
+    /**
+     * Method to render the file comparison.
+     * @param filecompare $filecompare the filecompare widget.
+     *
+     * @return Markup.
+     */
+    public function render_filecompare(filecompare $filecompare) {
+        $output = $this->output->header();
+        $output .= $this->render_from_template('block_coursefilesarchive/filecompare', $filecompare->export_for_template($this));
+        $output .= $this->output->footer();
+
+        return $output;
     }
 }
