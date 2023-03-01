@@ -41,8 +41,7 @@ class actions_form extends \moodleform {
 
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
-        //$update = get_string('updatearchive', 'block_coursefilesarchive');
-        //$this->add_action_buttons(false, $update);
+
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
         $buttonarray[] = $mform->createElement('submit', 'comparefiles', get_string('comparefiles', 'block_coursefilesarchive'));

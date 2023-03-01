@@ -29,7 +29,6 @@ namespace block_coursefilesarchive\output;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once("$CFG->dirroot/blocks/coursefilesarchive/block_coursefilesarchive_form.php");
 require_once("$CFG->dirroot/repository/lib.php");
 
 /**
@@ -66,7 +65,6 @@ class renderer extends \plugin_renderer_base {
                 'block_coursefilesarchive',
                 'course',
                 $courseid);
-
             redirect($redirecturl);
         }
 
@@ -78,37 +76,37 @@ class renderer extends \plugin_renderer_base {
            Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
         $fs = get_file_storage();
         $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
-   
+
         $data = new \stdClass();
         $data->id = $courseid;
         $aform = new actions_form(null, array('data' => $data));
         if ($formdata = $aform->get_data()) {
+            $redirecturl = course_get_url($courseid);
             // What button was pressed?
             if (!empty($formdata->updatearchive)) {
                 // Get the folder for the files.
                 $toolbox = \block_coursefilesarchive\toolbox::get_instance();
                 $blockarchivefolder = $toolbox->getarchivefolder($courseid);
-                //$redirecturl = course_get_url($courseid);
 
                 // Copy the files.
                 foreach ($files as $file) {
                     if (!$file->is_directory()) {
                         $filepath = $file->get_filepath();
                         $filename = $file->get_filename();
-   
+
                         // Ensure the destination path exists.
                         $thepathparts = explode('/', $filepath);
                         $depth = '';
                         foreach ($thepathparts as $pathpart) {
                             $depth .= $pathpart.'/';
                             if (!is_dir($blockarchivefolder.$depth)) {
-                               mkdir($blockarchivefolder.$depth, 0770, true);
+                                mkdir($blockarchivefolder.$depth, 0770, true);
                             }
                         }
-   
+
                         // Timestamp.
                         $timestamp = \block_coursefilesarchive\cfafile::gettimestamp($file->get_timemodified());
-   
+
                         // Copy content if new file.
                         $thefile = $blockarchivefolder.$filepath.$timestamp.$filename;
                         if (!is_readable($thefile)) {
@@ -118,10 +116,12 @@ class renderer extends \plugin_renderer_base {
                         }
                     }
                 }
-                //redirect($redirecturl);
             } else if (!empty($formdata->comparefiles)) {
-                
+                // TEMPORARY CODE FOR DEVELOPMENT.
+                $toolbox = \block_coursefilesarchive\toolbox::get_instance();
+                $cfafiles = $toolbox->filecompare($courseid, $contextid);
             }
+            redirect($redirecturl);
         }
         return $aform->render();
     }

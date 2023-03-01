@@ -25,11 +25,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once("$CFG->dirroot/blocks/coursefilesarchive/block_coursefilesarchive_form.php");
-require_once("$CFG->dirroot/repository/lib.php");
-
 /**
  * Class coursefilesarchive.
  *
@@ -68,89 +63,9 @@ class block_coursefilesarchive extends block_base {
 
         $renderer = $this->page->get_renderer('block_coursefilesarchive');
         $this->content->text = $renderer->render_filesform($courseid, $context);
-        
-        /*$data = new stdClass();
-        $data->id = $this->page->course->id;
-        $maxbytes = get_user_max_upload_file_size($context, $CFG->maxbytes);
-        $options = array('subdirs' => 1, 'maxbytes' => $maxbytes, 'maxfiles' => -1, 'accepted_types' => '*');
-        file_prepare_standard_filemanager(
-            $data,
-            'coursefilesarchive',
-            $options,
-            $context,
-            'block_coursefilesarchive',
-            'course',
-            $this->page->course->id);
-
-        $mform = new block_coursefilesarchive_edit_form(null, array('data' => $data, 'options' => $options));
-        $redirecturl = course_get_url($this->page->course->id);
-        if ($mform->is_cancelled()) {
-            redirect($redirecturl);
-        } else if ($formdata = $mform->get_data()) {
-            $formdata = file_postupdate_standard_filemanager(
-                $formdata,
-                'coursefilesarchive',
-                $options,
-                $context,
-                'block_coursefilesarchive',
-                'course',
-                $this->page->course->id);
-
-            redirect($redirecturl);
-        }
-
-        $this->content->text = $mform->render();*/
-
-        /* Returns an array of `stored_file` instances.
-           Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
-        /*$fs = get_file_storage();
-        $files = $fs->get_area_files($context->id, 'block_coursefilesarchive', 'course', $courseid);
-
-        $uform = new block_coursefilesarchive_update_form(null, array('data' => $data));
-        if ($formdata = $uform->get_data()) {
-            // Get the folder for the files.
-            $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-            $blockarchivefolder = $toolbox->getarchivefolder($courseid);
-
-            // Copy the files.
-            foreach ($files as $file) {
-                if (!$file->is_directory()) {
-                    $filepath = $file->get_filepath();
-                    $filename = $file->get_filename();
-
-                    // Ensure the destination path exists.
-                    $thepathparts = explode('/', $filepath);
-                    $depth = '';
-                    foreach ($thepathparts as $pathpart) {
-                        $depth .= $pathpart.'/';
-                        if (!is_dir($blockarchivefolder.$depth)) {
-                            mkdir($blockarchivefolder.$depth, 0770, true);
-                        }
-                    }
-
-                    // Timestamp.
-                    $timestamp = \block_coursefilesarchive\cfafile::gettimestamp($file->get_timemodified());
-
-                    // Copy content if new file.
-                    $thefile = $blockarchivefolder.$filepath.$timestamp.$filename;
-                    if (!is_readable($thefile)) {
-                        $file->copy_content_to($thefile);
-                        // Make read only.
-                        chmod($thefile, 0440);
-                    }
-                }
-            }
-            redirect($redirecturl);
-        }
-        $this->content->text .= $uform->render();*/
-
         $this->content->text .= $renderer->render_actionsform($courseid, $context->id);
 
         $this->content->footer = '';
-
-        // TEMPORARY CODE FOR DEVELOPMENT.
-        $toolbox = \block_coursefilesarchive\toolbox::get_instance();
-        $cfafiles = $toolbox->filecompare($courseid, $context->id);
 
         return $this->content;
     }
