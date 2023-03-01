@@ -129,11 +129,13 @@ class block_coursefilesarchive extends block_base {
                     // Timestamp.
                     $timestamp = \block_coursefilesarchive\cfafile::gettimestamp($file->get_timemodified());
 
-                    // Copy content.
+                    // Copy content if new file.
                     $thefile = $blockarchivefolder.$filepath.$timestamp.$filename;
-                    $file->copy_content_to($thefile);
-                    // Make read only.
-                    chmod($thefile, 0440);
+                    if (!is_readable($thefile)) {
+                        $file->copy_content_to($thefile);
+                        // Make read only.
+                        chmod($thefile, 0440);
+                    }
                 }
             }
             redirect($redirecturl);
