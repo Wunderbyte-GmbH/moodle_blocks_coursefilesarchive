@@ -16,7 +16,7 @@
 }}
 
 {{!
-    @template block_coursefilesarchive/frame
+    @template block_coursefilesarchive/filecompare
     @package    block_coursefilesarchive
     @version    See the value of '$plugin->version' in version.php.
     @copyright  &copy; 2023 G J Barnard.
@@ -47,8 +47,17 @@
     <h5>{{heading}}</h5>
     <ul>
     {{#cfafiles}}
-        <li>{{pathname}} - {{state}} - {{timestamp}}</li>
+        <li class="row">
+            <div class="col5">{{pathname}}</div>
+            <div class="col1">
+                {{#stateunknown}}{{#str}}cfastateunknown, block_coursefilesarchive{{/str}}{{/stateunknown}}
+                {{#statecoursearchive}}<span class="fa fa-check" style="color: var(--blue);" title="{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}</span>{{/statecoursearchive}}
+                {{#statearchive}}<span class="fa fa-check" style="color: var(--gray);" title="{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}</span>{{/statearchive}}
+                {{#statecourse}}<span class="fa fa-times" style="color: var(--red);" title="{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}</span>{{/statecourse}}
+            </div>
+            <div class="col6">{{timestamp}}</div>
+        </li>
     {{/cfafiles}}
     </ul>
-    <p><a href="{{{returnlink}}}">{{#str}}returncourse, block_superframe{{/str}}</a></p>
+    <p><a href="{{{returnlink}}}">{{#str}}returncourse, block_coursefilesarchive{{/str}}</a></p>
 </div>

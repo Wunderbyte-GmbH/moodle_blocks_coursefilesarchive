@@ -27,6 +27,7 @@
 
 namespace block_coursefilesarchive\output;
 
+use block_coursefilesarchive\cfafile;
 use moodle_url;
 use stdClass;
 
@@ -55,7 +56,22 @@ class filecompare implements \renderable, \templatable {
         foreach ($cfafiles as $cfafile) {
             $entry = new stdClass();
             $entry->pathname = $cfafile->getpathname();
-            $entry->state = $cfafile->getstate();
+            switch ($cfafile->getstate()) {
+                case cfafile::CFA_UNKNOWN:
+                    $entry->stateunknown = true;
+                    break;
+                case cfafile::CFA_COURSE_ARCHIVE:
+                    $entry->statecoursearchive = true;
+                    break;
+                case cfafile::CFA_ARCHIVE:
+                    $entry->statearchive = true;
+                    break;
+                case cfafile::CFA_COURSE:
+                    $entry->statecourse = true;
+                    break;
+                default:
+                    $entry->stateunknown = true;
+            }
             $entry->timestamp = $cfafile->gettimestamp();
 
             $data->cfafiles[] = $entry;

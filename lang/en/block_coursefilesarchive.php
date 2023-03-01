@@ -30,6 +30,7 @@ $string['pluginname'] = 'Course files archive';
 
 $string['updatearchive'] = 'Update archive';
 $string['comparefiles'] = 'Compare files';
+$string['returncourse'] = 'Return to course';
 
 // Settings.
 $string['settingsheader'] = 'Course files archive settings';
@@ -40,6 +41,12 @@ $string['archivelocationdesc'] = 'The archive location within the Moodle data fo
 
 $string['blockcategories'] = 'Block categories';
 $string['blockcategoriesdesc'] = 'Allow the the block to be shown in the following categories. Use the \'Ctrl\' key in combination with the mouse to select more than one or none.';
+
+// Course file archive states.
+$string['cfastateunknown'] = 'Unknown course file archive file state';
+$string['cfastatecoursearchive'] = 'Course files and archive';
+$string['cfastatecourse'] = 'Course files';
+$string['cfastatearchive'] = 'Archive';
 
 // Errors.
 $string['invalidcfastate'] = 'Invalid CFA state: {$a}.';
