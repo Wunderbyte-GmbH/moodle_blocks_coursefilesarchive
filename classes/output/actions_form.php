@@ -45,7 +45,7 @@ class actions_form extends \moodleform {
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
         $buttonarray[] = $mform->createElement('submit', 'comparefiles', get_string('comparefiles', 'block_coursefilesarchive'));
-        $mform->addGroup($buttonarray, 'buttons', '', ' ', false);
+        $mform->addGroup($buttonarray, 'cfabuttons', '', ' ', false);
 
         $this->set_data($data);
     }

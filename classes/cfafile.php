@@ -196,9 +196,9 @@ class cfafile {
     public function getpathname() {
         $retr = '';
         if (!empty($this->path)) {
-            $retr = '/'.implode('/', $this->path);
+            $retr = implode('/', $this->path).'/';
         }
-        $retr .= '/'.$this->filename;
+        $retr .= $this->filename;
 
         return $retr;
     }
