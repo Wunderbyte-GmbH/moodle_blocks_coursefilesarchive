@@ -73,7 +73,7 @@ class block_coursefilesarchive extends block_base {
      * This is a list of places where the block may or may not be added.
      */
     public function applicable_formats() {
-        global $PAGE;
+        global $PAGE; // Code checker will complain about this, but when upgrading '$this->page' is null, so we have no choice!
         $canaddtocourse = false;
         if (!empty($PAGE->category->id)) {
             $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
