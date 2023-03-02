@@ -33,31 +33,48 @@
     * none.
 
     Context variables required for this template:
-    * heading page title - string.
+    * cfafiles array List of files.
+    * hascfafiles bool Has files to show.
     * returnlink url of the course page containing the block instance.
 
     Example context (json):
     {
-        "heading": "Course files archive file compare",
+        "cfafiles": [
+                        {"pathname": "Test.txt", "statecoursearchive": true,"timestamp": "2023-02-27-18-15"  },
+                        {"pathname": "Debug.txt", "statecourse": true,"timestamp": "2023-01-30-17-32"  },
+                        {"pathname": "Verify.txt", "statearchive": true,"timestamp": "2023-03-01-18-43"  },
+                    ]
+        "hasfiles": true,
         "returnlink": "http://www.moodlebites.com/course/view.php?id=24"
     }
 }}
-
 <div class="container">
-    <h5>{{heading}}</h5>
-    <ul>
-    {{#cfafiles}}
-        <li class="row">
-            <div class="col5">{{pathname}}</div>
-            <div class="col1">
-                {{#stateunknown}}{{#str}}cfastateunknown, block_coursefilesarchive{{/str}}{{/stateunknown}}
-                {{#statecoursearchive}}<span class="fa fa-check" style="color: var(--blue);" title="{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}</span>{{/statecoursearchive}}
-                {{#statearchive}}<span class="fa fa-check" style="color: var(--gray);" title="{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}</span>{{/statearchive}}
-                {{#statecourse}}<span class="fa fa-times" style="color: var(--red);" title="{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}</span>{{/statecourse}}
-            </div>
-            <div class="col6">{{timestamp}}</div>
-        </li>
-    {{/cfafiles}}
-    </ul>
+    <h1>{{#str}}cfafilecomparison, block_coursefilesarchive{{/str}}</h1>
+    {{#hascfafiles}}
+    <table class="table">
+        <thead>
+            <th scope="col">{{#str}}cfapathname, block_coursefilesarchive{{/str}}</th>
+            <th scope="col">{{#str}}cfastate, block_coursefilesarchive{{/str}}</th>
+            <th scope="col">{{#str}}cfatimestamp, block_coursefilesarchive{{/str}}</th>
+        </thead>
+        <tbody>
+        {{#cfafiles}}
+            <tr>
+                <td>{{pathname}}</td>
+                <td>
+                    {{#stateunknown}}{{#str}}cfastateunknown, block_coursefilesarchive{{/str}}{{/stateunknown}}
+                    {{#statecoursearchive}}<span class="fa fa-lg fa-check" style="color: var(--blue);" title="{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}</span>{{/statecoursearchive}}
+                    {{#statearchive}}<span class="fa fa-lg fa-check" style="color: var(--gray);" title="{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}</span>{{/statearchive}}
+                    {{#statecourse}}<span class="fa fa-lg fa-times" style="color: var(--red);" title="{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}</span>{{/statecourse}}
+                </td>
+                <td>{{timestamp}}</td>
+            </tr>
+        {{/cfafiles}}
+        </tbody>
+    </table>
+    {{/hascfafiles}}
+    {{^hascfafiles}}
+    <p>{{#str}}nofilestocompare, block_coursefilesarchive{{/str}}</p>
+    {{/hascfafiles}}
     <p><a href="{{{returnlink}}}">{{#str}}returncourse, block_coursefilesarchive{{/str}}</a></p>
 </div>

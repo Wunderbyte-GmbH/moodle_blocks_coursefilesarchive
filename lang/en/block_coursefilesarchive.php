@@ -28,9 +28,15 @@
 // General.
 $string['pluginname'] = 'Course files archive';
 
-$string['updatearchive'] = 'Update archive';
+// Actions.
 $string['comparefiles'] = 'Compare files';
+$string['cfafilecomparison'] = 'Course files archive file comparison';
+$string['cfapathname'] = 'Name';
+$string['cfastate'] = 'State';
+$string['cfatimestamp'] = 'Timestamp';
+$string['nofilestocompare'] = 'No files to compare';
 $string['returncourse'] = 'Return to course';
+$string['updatearchive'] = 'Update archive';
 
 // Settings.
 $string['settingsheader'] = 'Course files archive settings';

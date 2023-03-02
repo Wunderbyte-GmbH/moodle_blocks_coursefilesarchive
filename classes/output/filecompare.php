@@ -46,35 +46,36 @@ class filecompare implements \renderable, \templatable {
 
         $data = new stdClass();
 
-        // Page heading and iframe data.
-        $data->heading = get_string('pluginname', 'block_coursefilesarchive');
-
-        // TEMPORARY CODE FOR DEVELOPMENT.
         $toolbox = \block_coursefilesarchive\toolbox::get_instance();
         $cfafiles = $toolbox->filecompare($this->courseid, $this->blockcontextid);
-        $data->cfafiles = array();
-        foreach ($cfafiles as $cfafile) {
-            $entry = new stdClass();
-            $entry->pathname = $cfafile->getpathname();
-            switch ($cfafile->getstate()) {
-                case cfafile::CFA_UNKNOWN:
-                    $entry->stateunknown = true;
-                    break;
-                case cfafile::CFA_COURSE_ARCHIVE:
-                    $entry->statecoursearchive = true;
-                    break;
-                case cfafile::CFA_ARCHIVE:
-                    $entry->statearchive = true;
-                    break;
-                case cfafile::CFA_COURSE:
-                    $entry->statecourse = true;
-                    break;
-                default:
-                    $entry->stateunknown = true;
-            }
-            $entry->timestamp = $cfafile->gettimestamp();
+        if (empty($cfafiles)) {
+            $data->hascfafiles = false;
+        } else {
+            $data->hascfafiles = true;
+            $data->cfafiles = array();
+            foreach ($cfafiles as $cfafile) {
+                $entry = new stdClass();
+                $entry->pathname = $cfafile->getpathname();
+                switch ($cfafile->getstate()) {
+                    case cfafile::CFA_UNKNOWN:
+                        $entry->stateunknown = true;
+                        break;
+                    case cfafile::CFA_COURSE_ARCHIVE:
+                        $entry->statecoursearchive = true;
+                        break;
+                    case cfafile::CFA_ARCHIVE:
+                        $entry->statearchive = true;
+                        break;
+                    case cfafile::CFA_COURSE:
+                        $entry->statecourse = true;
+                        break;
+                    default:
+                        $entry->stateunknown = true;
+                }
+                $entry->timestamp = $cfafile->gettimestamp();
 
-            $data->cfafiles[] = $entry;
+                $data->cfafiles[] = $entry;
+            }
         }
 
         $data->returnlink = new moodle_url('/course/view.php', ['id' => $this->courseid]);
