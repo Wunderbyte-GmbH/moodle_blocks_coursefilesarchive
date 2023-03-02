@@ -73,10 +73,13 @@ class block_coursefilesarchive extends block_base {
      * This is a list of places where the block may or may not be added.
      */
     public function applicable_formats() {
-        $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
-        if (!empty($this->page->category->id)) {
+        global $PAGE;
+        $canaddtocourse = false;
+        if (!empty($PAGE->category->id)) {
             $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-            $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
+            $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
+        } else if ($PAGE->pagelayout == 'maintenance') {
+            $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
         }
         return array(
             'all' => false,
