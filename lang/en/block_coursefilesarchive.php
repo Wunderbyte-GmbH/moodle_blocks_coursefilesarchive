@@ -48,6 +48,9 @@ $string['archivelocationdesc'] = 'The archive location within the Moodle data fo
 $string['blockcategories'] = 'Block categories';
 $string['blockcategoriesdesc'] = 'Allow the the block to be shown in the following categories. Use the \'Ctrl\' key in combination with the mouse to select more than one or none.';
 
+$string['deleteblocksinunsupportedcategories'] = 'Delete blocks in unsupported categories';
+$string['deleteblocksinunsupportedcategoriesdesc'] = 'Delete the blocks in a category if they have been added to courses within that category, and that category has been removed from the \'blockcategories\' setting.';
+
 // Course file archive states.
 $string['cfastateunknown'] = 'Unknown course file archive file state';
 $string['cfastatecoursearchive'] = 'Course files and archive';

@@ -36,6 +36,14 @@ require_once("$CFG->dirroot/repository/lib.php");
  */
 class renderer extends \plugin_renderer_base {
 
+    /**
+     * Method to render the files form.
+     *
+     * @param int $courseid The course id.
+     * @param int $contextid The context id.
+     *
+     * @return string Markup.
+     */
     public function render_filesform($courseid, $context) {
         global $CFG;
 
@@ -71,14 +79,32 @@ class renderer extends \plugin_renderer_base {
         return $mform->render();
     }
 
-    public function render_actionsform($courseid, $contextid) {
-        /* Returns an array of `stored_file` instances.
-           Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
-        $fs = get_file_storage();
-        $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
+    /**
+     * Method to render the actions form.
+     *
+     * @param int $courseid The course id.
+     * @param int $contextid The context id.
+     * @param int $categoryid The category id.
+     *
+     * @return string Markup.
+     */
+    public function render_actionsform($courseid, $contextid, $categoryid) {
 
         $data = new \stdClass();
         $data->id = $courseid;
+        $data->updatearchiveenabled = true;
+
+        // Can unsupported categories be shown?
+        $deleteblocksinunsupportedcategories = get_config('block_coursefilesarchive' , 'deleteblocksinunsupportedcategories');
+        if (empty($deleteblocksinunsupportedcategories)) {
+            // Only enable the 'Update archive' button if the block is in an allowed category.
+            $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
+            $blockenabledforcategory = in_array($categoryid, explode(',' , $categoryids));
+            if (!$blockenabledforcategory) {
+                $data->updatearchiveenabled = false;
+            }
+        }
+
         $aform = new actions_form(null, array('data' => $data));
         if ($formdata = $aform->get_data()) {
             // What button was pressed?
@@ -87,6 +113,11 @@ class renderer extends \plugin_renderer_base {
                 // Get the folder for the files.
                 $toolbox = \block_coursefilesarchive\toolbox::get_instance();
                 $blockarchivefolder = $toolbox->getarchivefolder($courseid);
+
+                /* Returns an array of `stored_file` instances.
+                   Ref: https://moodledev.io/docs/apis/subsystems/files#list-all-files-in-a-particular-file-area. */
+                $fs = get_file_storage();
+                $files = $fs->get_area_files($contextid, 'block_coursefilesarchive', 'course', $courseid);
 
                 // Copy the files.
                 foreach ($files as $file) {
@@ -130,9 +161,10 @@ class renderer extends \plugin_renderer_base {
 
     /**
      * Method to render the file comparison.
-     * @param filecompare $filecompare the filecompare widget.
      *
-     * @return Markup.
+     * @param filecompare $filecompare The filecompare widget.
+     *
+     * @return string Markup.
      */
     public function render_filecompare(filecompare $filecompare) {
         $output = $this->output->header();

@@ -57,4 +57,11 @@ if ($ADMIN->fulltree) {
     $settings->add(new \block_coursefilesarchive\admin_setting_categoryconfigmultiselect(
         $name, $title, $description, $default, $choices)
     );
+
+    $settings->add(new admin_setting_configcheckbox(
+        'block_coursefilesarchive/deleteblocksinunsupportedcategories',
+        get_string('deleteblocksinunsupportedcategories', 'block_coursefilesarchive'),
+        get_string('deleteblocksinunsupportedcategoriesdesc', 'block_coursefilesarchive'),
+        0)
+    );
 }
