@@ -43,12 +43,14 @@ class actions_form extends \moodleform {
         $mform->setType('id', PARAM_INT);
 
         $buttonarray = array();
+        $updatearchiveextra = array();
         if ($data->updatearchiveenabled) {
             $updatearchivetype = 'submit';
         } else {
             $updatearchivetype = 'button';
+            $updatearchiveextra['disabled'] = true;
         }
-        $buttonarray[] = $mform->createElement($updatearchivetype, 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'));
+        $buttonarray[] = $mform->createElement($updatearchivetype, 'updatearchive', get_string('updatearchive', 'block_coursefilesarchive'), $updatearchiveextra);
         $buttonarray[] = $mform->createElement('submit', 'comparefiles', get_string('comparefiles', 'block_coursefilesarchive'));
         $mform->addGroup($buttonarray, 'cfabuttons', '', ' ', false);
 
