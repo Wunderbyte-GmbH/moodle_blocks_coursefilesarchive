@@ -83,8 +83,15 @@ class block_coursefilesarchive extends block_base {
         if (!empty($this->page->category->id)) {
             $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
             $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
-        } else if (isset($CFG->upgraderunning)) {
-            $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
+        } else {
+            // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
+            // Stack trace:
+            // line 990 of \lib\upgradelib.php: plugin_defective_exception thrown.
+            // line 567 of \lib\upgradelib.php: call to upgrade_plugins_blocks().
+            // line 1917 of \lib\upgradelib.php: call to upgrade_plugins().
+            // line 713 of \admin\index.php: call to upgrade_noncore().
+            // There is no 'page' so almost certainly safe to do this here as we cannot check.
+            $canaddtocourse = true;
         }
         return array(
             'all' => false,

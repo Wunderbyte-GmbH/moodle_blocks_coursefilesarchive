@@ -30,7 +30,7 @@ Feature: Block visibility
       | debbie   | NCFA   | teacher        |
       | dennis   | NCFA   | student        |
     And the following config values are set as admin:
-      | config          | value  | plugin |
+      | config          | value  | plugin                   |
       | blockcategories | CFACAT | block_coursefilesarchive |
     And I enable "coursefilesarchive" "block" plugin
     And I log in as "denise"
