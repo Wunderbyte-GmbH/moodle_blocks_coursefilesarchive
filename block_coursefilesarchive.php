@@ -44,6 +44,12 @@ class block_coursefilesarchive extends block_base {
     public function get_content() {
         global $CFG;
 
+        $courseid = $this->page->course->id;
+        $coursecontext = context_course::instance($courseid, MUST_EXIST);
+        if (!has_capability('moodle/course:update', $coursecontext)) {
+            return '';
+        }
+
         // Do we have any content?
         if ($this->content !== null) {
             return $this->content;
@@ -57,7 +63,6 @@ class block_coursefilesarchive extends block_base {
         // Content.
         $this->content = new stdClass();
 
-        $courseid = $this->page->course->id;
         $context = context_block::instance($this->instance->id, MUST_EXIST);
 
         $renderer = $this->page->get_renderer('block_coursefilesarchive');
@@ -77,11 +82,11 @@ class block_coursefilesarchive extends block_base {
         if (defined('BEHAT_SITE_RUNNING')) {
             $canaddtocourse = true;
         } else {
-            global $CFG;
-            if (!empty($this->page->category->id)) {
+            global $PAGE; // Code checker will complain about this, but when upgrading '$this->page' is null, so we have no choice!
+            if (!empty($PAGE->category->id)) {
                 $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-                $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
-            } else if (isset($CFG->upgraderunning)) {
+                $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
+            } else if ($PAGE->pagelayout == 'maintenance') {
                 $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
             }
         }
