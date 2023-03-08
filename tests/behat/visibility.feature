@@ -33,7 +33,7 @@ Feature: Block visibility
     And the following config values are set as admin:
       | config          | value  | plugin                   |
       | blockcategories | 1      | block_coursefilesarchive |
-    And I enable "coursefilesarchive" "block" plugin
+#   And I enable "coursefilesarchive" "block" plugin
     And I log in as "denise"
     And I am on "CourseFilesArchive" course homepage with editing mode on
     And I add the "Course files archive" block
