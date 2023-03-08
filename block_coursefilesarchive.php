@@ -82,11 +82,11 @@ class block_coursefilesarchive extends block_base {
         if (defined('BEHAT_SITE_RUNNING')) {
             $canaddtocourse = true;
         } else {
-            global $PAGE; // Code checker will complain about this, but when upgrading '$this->page' is null, so we have no choice!
-            if (!empty($PAGE->category->id)) {
+            global $CFG;
+            if (!empty($this->page->category->id)) {
                 $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-                $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
-            } else if ($PAGE->pagelayout == 'maintenance') {
+                $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
+            } else if (isset($CFG->upgraderunning)) {
                 $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
             }
         }
