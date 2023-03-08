@@ -80,7 +80,7 @@ class block_coursefilesarchive extends block_base {
             global $CFG;
             if (!empty($this->page->category->id)) {
                 $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-                $canaddtocourse = in_array($PAGE->category->id, explode(',' , $categoryids));
+                $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));
             } else if (isset($CFG->upgraderunning)) {
                 $canaddtocourse = true; // Has to be true as blocks/moodlebloc.class.php '_self_test()' method will fail when upgrading.
             }
