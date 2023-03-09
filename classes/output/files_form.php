@@ -42,7 +42,7 @@ class files_form extends \moodleform {
 
         $mform->addElement('hidden', 'id', $data->id);
         $mform->setType('id', PARAM_INT);
-        $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('files'), null, $options);
+        $mform->addElement('filemanager', 'coursefilesarchive_filemanager', get_string('pluginname', 'block_coursefilesarchive'), null, $options);
         $submit = get_string('savechanges');
         $this->add_action_buttons(true, $submit);
 

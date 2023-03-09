@@ -8,7 +8,7 @@ Feature: Block visibility
 
   Background:
     Given the following "users" exist:
-      | username  | firstname     | lastname | email                |
+      | username  | firstname     | lastname | email                  |
       | denise    | Denise Emma   | Bug      | debug1@local.localhost |
       | dennis    | Dennis Edward | Bug      | debug2@local.localhost |
       | debbie    | Debbie Emily  | Bug      | debug3@local.localhost |
