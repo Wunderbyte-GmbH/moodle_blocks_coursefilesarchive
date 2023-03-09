@@ -1,6 +1,6 @@
 @block @block_coursefilesarchive @_file_upload @javascript
-Feature: Move file to archive
-  As a teacher I need to move file to the archive from the course file archive block.  Note: The duckling image is copyright 'Gareth J Barnard 2020' use only for this test without permission.
+Feature: Update archive
+  As a teacher I need to copy a file to the archive from the course file archive block.  Note: The duckling image is copyright 'Gareth J Barnard 2020' use only for this test without permission.
 
   Background:
     Given the following "users" exist:
@@ -25,7 +25,7 @@ Feature: Move file to archive
     And I log out
 
 
-  Scenario: Move file to archive.
+  Scenario: Copy file to archive.
     When I log in as "denise"
     And I am on "CourseFilesArchive" course homepage
     And I press "Update archive"
