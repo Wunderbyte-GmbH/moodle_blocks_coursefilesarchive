@@ -79,7 +79,6 @@ class block_coursefilesarchive extends block_base {
      */
     public function applicable_formats() {
         $canaddtocourse = false;
-        global $CFG;
         if (!empty($this->page->category->id)) {
             $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
             $canaddtocourse = in_array($this->page->category->id, explode(',' , $categoryids));

@@ -94,14 +94,16 @@ class renderer extends \plugin_renderer_base {
         $data->id = $courseid;
         $data->updatearchiveenabled = true;
 
-        // Can unsupported categories be shown?
-        $deleteblocksinunsupportedcategories = get_config('block_coursefilesarchive' , 'deleteblocksinunsupportedcategories');
-        if (empty($deleteblocksinunsupportedcategories)) {
-            // Only enable the 'Update archive' button if the block is in an allowed category.
-            $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-            $blockenabledforcategory = in_array($categoryid, explode(',' , $categoryids));
-            if (!$blockenabledforcategory) {
-                $data->updatearchiveenabled = false;
+        if (!defined('BEHAT_SITE_RUNNING')) {
+            // Can unsupported categories be shown?
+            $deleteblocksinunsupportedcategories = get_config('block_coursefilesarchive' , 'deleteblocksinunsupportedcategories');
+            if (empty($deleteblocksinunsupportedcategories)) {
+                // Only enable the 'Update archive' button if the block is in an allowed category.
+                $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
+                $blockenabledforcategory = in_array($categoryid, explode(',' , $categoryids));
+                if (!$blockenabledforcategory) {
+                    $data->updatearchiveenabled = false;
+                }
             }
         }
 

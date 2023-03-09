@@ -51,7 +51,7 @@
 <div class="container">
     <h1>{{#str}}cfafilecomparison, block_coursefilesarchive{{/str}}</h1>
     {{#hascfafiles}}
-    <table class="table">
+    <table id="cfafilecomparison" class="table">
         <thead>
             <th scope="col">{{#str}}cfapathname, block_coursefilesarchive{{/str}}</th>
             <th scope="col">{{#str}}cfastate, block_coursefilesarchive{{/str}}</th>
@@ -60,14 +60,14 @@
         <tbody>
         {{#cfafiles}}
             <tr>
-                <td>{{pathname}}</td>
-                <td>
-                    {{#stateunknown}}{{#str}}cfastateunknown, block_coursefilesarchive{{/str}}{{/stateunknown}}
-                    {{#statecoursearchive}}<span class="fa fa-lg fa-check" style="color: var(--blue);" title="{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}</span>{{/statecoursearchive}}
-                    {{#statearchive}}<span class="fa fa-lg fa-check" style="color: var(--gray);" title="{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}</span>{{/statearchive}}
-                    {{#statecourse}}<span class="fa fa-lg fa-times" style="color: var(--red);" title="{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}</span>{{/statecourse}}
+                <td class="cfaname">{{pathname}}</td>
+                <td class="cfastate
+                    {{#stateunknown}} cfastateunknown">{{#str}}cfastateunknown, block_coursefilesarchive{{/str}}{{/stateunknown}}
+                    {{#statecoursearchive}} cfastatecoursearchive"><span class="fa fa-lg fa-check" style="color: var(--blue);" title="{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecoursearchive, block_coursefilesarchive{{/str}}</span>{{/statecoursearchive}}
+                    {{#statearchive}} cfastatearchive"><span class="fa fa-lg fa-check" style="color: var(--gray);" title="{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatearchive, block_coursefilesarchive{{/str}}</span>{{/statearchive}}
+                    {{#statecourse}} cfastatecourse"><span class="fa fa-lg fa-times" style="color: var(--red);" title="{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}" aria-hidden="true"></span><span class="sr-only">{{#str}}cfastatecourse, block_coursefilesarchive{{/str}}</span>{{/statecourse}}
                 </td>
-                <td>{{timestamp}}</td>
+                <td class="cfatimestamp">{{timestamp}}</td>
             </tr>
         {{/cfafiles}}
         </tbody>
