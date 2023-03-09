@@ -24,3 +24,15 @@
 .block_coursefilesarchive #fgroup_id_cfabuttons fieldset > div {
     justify-content: center;
 }
+
+#page-blocks-coursefilesarchive-filecompare #cfafilecomparison .cfastate.cfastatecoursearchive .cfastateicon {
+    color: var(--blue);
+}
+
+#page-blocks-coursefilesarchive-filecompare #cfafilecomparison .cfastate.cfastatearchive .cfastateicon {
+    color: var(--gray);
+}
+
+#page-blocks-coursefilesarchive-filecompare #cfafilecomparison .cfastate.cfastatecourse .cfastateicon {
+    color: var(--red);
+}
