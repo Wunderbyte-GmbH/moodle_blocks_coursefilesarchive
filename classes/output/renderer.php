@@ -98,9 +98,18 @@ class renderer extends \plugin_renderer_base {
             // Can unsupported categories be shown?
             $deleteblocksinunsupportedcategories = get_config('block_coursefilesarchive' , 'deleteblocksinunsupportedcategories');
             if (empty($deleteblocksinunsupportedcategories)) {
-                // Only enable the 'Update archive' button if the block is in an allowed category.
-                $categoryids = get_config('block_coursefilesarchive' , 'blockcategories');
-                $blockenabledforcategory = in_array($categoryid, explode(',' , $categoryids));
+                // Only enable the 'Update archive' button if the block is in an allowed category or its subcategory.
+                $categoryids = explode(',' , get_config('block_coursefilesarchive' , 'blockcategories'));
+
+                // Recursively check if the category of the current course lies within any allowed categories.
+                $blockenabledforcategory = false;
+                foreach ($categoryids as $allowedid) {
+                    if ($this->check_id_in_subcategories($categoryid, $allowedid)) {
+                        $blockenabledforcategory = true;
+                        break;
+                    }
+                }
+
                 if (!$blockenabledforcategory) {
                     $data->updatearchiveenabled = false;
                 }
@@ -174,5 +183,29 @@ class renderer extends \plugin_renderer_base {
         $output .= $this->output->footer();
 
         return $output;
+    }
+
+
+    /**
+     * Checks if the current category id matches any allowed category id.
+     *
+     * If the current id doesn't exactly match the allowed id it will
+     * recursively check all child categories of the allowed category
+     *
+     * @param int $id id of the category the current course belongs to
+     * @param int $allowed_id id of a category that is allowed
+     */
+    private function check_id_in_subcategories(int $id, int $allowedid): bool {
+        if ($id == $allowedid) {
+            return true;
+        }
+
+        $subcategories = \core_course_category::get($allowedid)->get_children();
+        foreach ($subcategories as $subcategory) {
+            if ($this->check_id_in_subcategories($id, $subcategory->id)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
